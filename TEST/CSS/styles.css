@@ -11,6 +11,8 @@ body {
     color: white !important;
 }
 
+
+
 .nav-tabs {
     border-bottom: none;
 }
@@ -150,4 +152,8 @@ a {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #952F57;
+}
+
+.current {
+    background: red;
 }

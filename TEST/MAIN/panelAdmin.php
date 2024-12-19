@@ -53,21 +53,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="row chatDescription" id="chatAbstract1"></div>
     </div>
 
-    <ul>
+    <ul class="canales_descriptions">
         <?php
             // Fetch canal descriptions from the database
-            $query = "SELECT id, nombre, descripcion FROM canales"; // Adjust the query as necessary
+            $query = "SELECT id, nombre, descripcion, amplitud, usuarios FROM canales"; // Adjust the query as necessary
             $result = $pdo->query($query);
+            while($row = $result->fetch()):
+        ?>
+        <div class="canal_description">
+            <h3> <?php echo htmlspecialchars($row['nombre']); ?> (<?php echo htmlspecialchars($row['amplitud']); ?>)</h3>
+            <p> Descripción: <?php echo nl2br(htmlspecialchars($row['descripcion'])); ?> </p>
+            <p> Número de usuarios activos: <?php echo nl2br(htmlspecialchars($row['usuarios'])); ?> </p>
 
+            <button onclick="editCanal(<?php echo $row['id']; ?>)" style="background-color: blue; color: white;">
+                <i class="fas fa-edit"></i> Editar
+            </button>
             
-            echo '<div class="canal-descriptions">';
-            while ($row = $result->fetch()) {
-                echo '<div class="canal">';
-                echo '<h3>' . htmlspecialchars($row['nombre']) . '</h3>'; // Display canal name
-                echo '<p>' . nl2br(htmlspecialchars($row['descripcion'])) . '</p>'; // Display canal description
-                echo '</div>';
-            }
-            echo '</div>';
+            <button onclick="deleteCanal(<?php echo $row['id']; ?>)" style="background-color: red; color: white;">
+                <i class="fas fa-trash"></i> Eliminar
+            </button>
+        </div>
+        <?php
+            endwhile;        
         ?>
     </ul>
 
@@ -82,5 +89,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </select>
         <input type="submit" value="Add Canal">
     </form>
+
+    <script>
+        function editCanal(canalId) {
+            // Redirect to the edit page or show an edit form
+            window.location.href = `edit_canal.php?id=${canalId}`;
+        }
+
+        function deleteCanal(canalId) {
+            if (confirm("¿Estás seguro de que deseas eliminar este canal?")) {
+                fetch(`../MAIN/delete_canal.php?id=${canalId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Canal eliminado con éxito.");
+                        location.reload(); // Reload the page to see the changes
+                    } else {
+                        alert("Error al eliminar el canal.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        }
+</script>
 </body>
 </html>

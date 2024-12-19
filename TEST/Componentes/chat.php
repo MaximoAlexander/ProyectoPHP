@@ -64,7 +64,7 @@ function saveEdit(messageId) {
             contenido: newContent 
         }) 
     }) 
-    .then(response => { 
+    .then(response => {     
         if (response.ok) { 
             document.getElementById('mensaje-' + messageId).innerHTML = nl2br(htmlspecialchars(newContent)); 
             showEditField(messageId); // Ocultar el campo de edición
